@@ -6,9 +6,9 @@ const dbConfig = config.get("dbConfig");
 
 try {
   if (dbConfig.user) {
-    await mongoose.connect(`mongodb+srv://${dbConfig.user.username}:${dbConfig.user.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.dbName}`);
+    mongoose.connect(`mongodb+srv://${dbConfig.user.username}:${dbConfig.user.password}@${dbConfig.host}/${dbConfig.dbName}`);
   } else {
-    await mongoose.connect(`mongodb://${dbConfig.host}:${dbConfig.port}`);
+    mongoose.connect(`mongodb://${dbConfig.host}:${dbConfig.port}`);
   }
 } catch (e) {
   console.error(e);
