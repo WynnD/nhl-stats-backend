@@ -3,5 +3,6 @@
         "host": "localhost",
         "port": 27017,
         "dbName": "nhl-stats"
-    }
+    },
+    "apiUrl": "https://statsapi.web.nhl.com/api/v1"
 }

@@ -2,7 +2,7 @@
     "dbConfig": {
         "host": "nhlstats-ej5fi.mongodb.net",
         "port": 27017,
-        "dbName": "test",
+        "dbName": "nhl-stats",
         "user": {
             "username": "nhl-stats",
             "password": "Kazer8819"
