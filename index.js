@@ -24,13 +24,13 @@ const getTeamRoster = async function (teamObjectId, teamApiId) {
       }
     });
   }
-  console.log('added', playerIds.length, 'players to db for teamid', teamObjectId);
   return playerIds;
 }
 
 const handleTeam = async function (team) {
   const teamObjectId = new mongoose.Types.ObjectId();
   const teamRoster = await getTeamRoster(teamObjectId, team.id);
+  console.log(`added ${teamRoster.length} players to the ${team.name}`);
   const teamData = {
     _id: teamObjectId,
     id: team.id,
@@ -47,13 +47,13 @@ const handleTeam = async function (team) {
   const newTeam = new model.Team(teamData);
   newTeam.save((err, team) => {
     if (err) console.log(err);
-    else console.log(team._id, '- added the', team.name); 
+    else console.log(`Added team ${team.name}`); 
   });
 }
 
 const handleTeamsResponse = async function(response) {
   const teams = response.data.teams;
-  console.log(teams.length, 'teams found');
+  console.log(`${teams.length} teams found`);
   for (const team of teams) {
     await handleTeam(team);
   }
