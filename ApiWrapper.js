@@ -19,7 +19,7 @@ class ApiWrapper {
       const stats = apiResponse.data.stats[0].splits[0].stat
       return stats
     } catch (e) {
-      console.log('Player does not have postseason stats')
+      // console.log('Player does not have postseason stats')
       return false
     }
   }
