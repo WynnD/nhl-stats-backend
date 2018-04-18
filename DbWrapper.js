@@ -16,7 +16,7 @@ class DbWrapper {
     }
   }
 
-  async addTeam (team) {
+  addTeam (team) {
     const newTeam = new model.Team(team)
     newTeam.save((err, team) => {
       if (err) console.log(err)
@@ -24,7 +24,7 @@ class DbWrapper {
     })
   }
 
-  async addPlayer (player) {
+  addPlayer (player) {
     const newPlayer = new model.Player(player)
     newPlayer.save((err, player) => {
       if (err) console.log(err)
@@ -36,7 +36,7 @@ class DbWrapper {
 
   async getAllTeams () {
     return new Promise((resolve, reject) => {
-      model.Team.find({}, (error, teamsArray) => {
+      model.Team.find({}).lean().exec((error, teamsArray) => {
         if (error) reject(error)
         else resolve(teamsArray)
       })
@@ -45,7 +45,7 @@ class DbWrapper {
 
   async getPlayersByTeamId (teamId) {
     return new Promise((resolve, reject) => {
-      model.Player.find({teamId: teamId}, (err, roster) => {
+      model.Player.find({teamId}).lean().exec((err, roster) => {
         if (err) reject(err)
         else resolve(roster)
       })
@@ -54,10 +54,23 @@ class DbWrapper {
 
   async getPlayerByObjectId (playerId) {
     return new Promise((resolve, reject) => {
-      model.Team.findById(playerId, (err, player) => {
+      model.Team.findById(playerId).lean().exec((err, player) => {
         if (err) reject(err)
         else resolve(player)
       })
+    })
+  }
+
+  addCalculation (type, data) {
+    const insertData = {
+      date: new Date(),
+      type,
+      data
+    }
+    const newCalculation = new model.Calculation(insertData)
+    newCalculation.save((err, calc) => {
+      if (err) console.error(err)
+      else console.log(calc)
     })
   }
 }

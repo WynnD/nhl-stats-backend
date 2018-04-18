@@ -56,11 +56,20 @@ try {
   db.connect(() => {
     mongoose.connection.db.dropDatabase()
     fetchAllTeamsAndPlayers().then(() => {
-      calc.teamMostPostSeasonGames()
+      fetchMostPostSeasonGamesByTeam()
     })
     // api.getCareerPostSeasonStats(8471675);
     // calc.teamMostPostSeasonGames();
   })
 } catch (e) {
   console.error(e)
+}
+
+const fetchMostPostSeasonGamesByTeam = async function () {
+  try {
+    const data = await calc.mostPostSeasonGamesByTeam()
+    db.addCalculation('MostPostSeasonGamesByTeam', data)
+  } catch (e) {
+    console.error(e)
+  }
 }

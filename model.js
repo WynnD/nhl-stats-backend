@@ -45,7 +45,14 @@ const playerSchema = new Schema({
   position: positionSchema
 })
 
+const calculationSchema = new Schema({
+  date: Date,
+  type: String,
+  data: [Mixed]
+})
+
+const Calculation = mongoose.model('Calculation', calculationSchema)
 const Team = mongoose.model('Team', teamSchema)
 const Player = mongoose.model('Player', playerSchema)
 
-module.exports = { Team, Player }
+module.exports = { Team, Player, Calculation }
