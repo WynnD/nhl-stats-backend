@@ -39,16 +39,22 @@ const positionSchema = new Schema({
 
 const playerSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  teamId: {type: Schema.Types.ObjectId, ref: 'Team'},
+  team: {type: Schema.Types.ObjectId, ref: 'Team'},
   person: personSchema,
   jerseyNumber: Number,
   position: positionSchema
 })
 
+const calculationDataSchema = new Schema({
+  args: [{ type: Schema.Types.ObjectId }],
+  name: String,
+  values: [Mixed]
+})
+
 const calculationSchema = new Schema({
-  date: Date,
+  dateCreated: Date,
   type: String,
-  data: [Mixed]
+  datapoints: [calculationDataSchema]
 })
 
 const Calculation = mongoose.model('Calculation', calculationSchema)

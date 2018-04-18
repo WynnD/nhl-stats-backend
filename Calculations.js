@@ -9,13 +9,13 @@ class Calculations {
       const teamData = await this.calcPostGameSum(team)
       responseList.push(teamData)
     }
-    responseList.sort((a, b) => { return b.gamesSum - a.gamesSum })
+    responseList.sort((a, b) => { return b.values[0] - a.values[0] })
     return responseList
   }
 
   async calcPostGameSum (team) {
     let gamesSum = 0
-    const roster = await db.getPlayersByTeamId(team._id)
+    const roster = await db.getPlayersByTeamObjectId(team._id)
     for (const player of roster) {
       const stats = await api.getCareerPostSeasonStats(player.person.id)
       if (stats !== false && stats.games !== undefined) {
@@ -23,11 +23,13 @@ class Calculations {
         gamesSum += games
       }
     }
+
     const teamData = {
-      teamId: team._id,
+      args: [team._id],
       name: team.name,
-      gamesSum
+      values: [gamesSum]
     }
+
     return teamData
   }
 }

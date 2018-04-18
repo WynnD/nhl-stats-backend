@@ -43,34 +43,65 @@ class DbWrapper {
     })
   }
 
-  async getPlayersByTeamId (teamId) {
+  async getPlayersByTeamObjectId (teamObjectId) {
     return new Promise((resolve, reject) => {
-      model.Player.find({teamId}).lean().exec((err, roster) => {
+      model.Player.find({team: teamObjectId}).lean().exec((err, roster) => {
         if (err) reject(err)
         else resolve(roster)
       })
     })
   }
 
-  async getPlayerByObjectId (playerId) {
+  async getPlayerByObjectId (objectId) {
     return new Promise((resolve, reject) => {
-      model.Team.findById(playerId).lean().exec((err, player) => {
+      model.Player.findById(objectId).lean().exec((err, player) => {
         if (err) reject(err)
         else resolve(player)
       })
     })
   }
 
-  addCalculation (type, data) {
+  async getTeamByObjectId (objectId) {
+    return new Promise((resolve, reject) => {
+      model.Team.findById(objectId).lean().exec((err, player) => {
+        if (err) reject(err)
+        else resolve(player)
+      })
+    })
+  }
+
+  addCalculation (type, datapoints) {
     const insertData = {
-      date: new Date(),
+      dateCreated: new Date(),
       type,
-      data
+      datapoints
     }
     const newCalculation = new model.Calculation(insertData)
     newCalculation.save((err, calc) => {
       if (err) console.error(err)
       else console.log(calc)
+    })
+  }
+
+  async getMostRecentTeamCalculation (type) {
+    const populateOptions = {
+      path: 'data',
+      populate: {path: 'teamId'}
+    }
+    return new Promise((resolve, reject) => {
+      model.Calculation.findOne({type: type})/* .populate(populateOptions) */.sort({date: -1}).lean().exec((err, calc) => {
+        if (err) reject(err)
+        else resolve(calc)
+      })
+    })
+  }
+
+  async getMostRecentPlayerCalculation (type) {
+    return new Promise((resolve, reject) => {
+      model.Calculation.findOne({type: type}).populate('playerId').sort({date: -1}).lean().exec((err, calc) => {
+        if (err) reject(err)
+        else resolve(calc)
+      })
     })
   }
 }

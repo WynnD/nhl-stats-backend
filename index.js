@@ -10,7 +10,7 @@ const fetchRoster = async function (teamObjectId, teamApiId) {
   let playerIds = []
   for (const player of roster) {
     player._id = new mongoose.Types.ObjectId()
-    player.teamId = teamObjectId
+    player.team = teamObjectId
     await db.addPlayer(player)
     playerIds.push(player._id)
   }
@@ -53,11 +53,14 @@ const fetchAllTeamsAndPlayers = async function () {
 }
 
 try {
-  db.connect(() => {
-    mongoose.connection.db.dropDatabase()
-    fetchAllTeamsAndPlayers().then(() => {
-      fetchMostPostSeasonGamesByTeam()
-    })
+  db.connect(async () => {
+    // mongoose.connection.db.dropDatabase()
+    // await fetchAllTeamsAndPlayers()
+    await fetchMostPostSeasonGamesByTeam()
+    // db.getMostRecentTeamCalculation('MostPostSeasonGames').then((data) => {
+    // console.log(data.data[0])
+    // })
+
     // api.getCareerPostSeasonStats(8471675);
     // calc.teamMostPostSeasonGames();
   })
@@ -68,7 +71,7 @@ try {
 const fetchMostPostSeasonGamesByTeam = async function () {
   try {
     const data = await calc.mostPostSeasonGamesByTeam()
-    db.addCalculation('MostPostSeasonGamesByTeam', data)
+    db.addCalculation('MostPostSeasonGames', data)
   } catch (e) {
     console.error(e)
   }
