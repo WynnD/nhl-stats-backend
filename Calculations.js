@@ -2,18 +2,18 @@ const db = require('./DbWrapper')
 const api = require('./ApiWrapper')
 
 class Calculations {
-  async mostPostSeasonGamesByTeam () {
+  async playoffGamesByTeam () {
     let responseList = []
     const teams = await db.getAllTeams()
     for (const team of teams) {
-      const teamData = await this.calcPostGameSum(team)
+      const teamData = await this.calcTeamPlayoffGames(team)
       responseList.push(teamData)
     }
     responseList.sort((a, b) => { return b.values[0] - a.values[0] })
     return responseList
   }
 
-  async calcPostGameSum (team) {
+  async calcTeamPlayoffGames (team) {
     let gamesSum = 0
     const roster = await db.getPlayersByTeamObjectId(team._id)
     for (const player of roster) {

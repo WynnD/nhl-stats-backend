@@ -1,8 +1,20 @@
 const mongoose = require('mongoose')
-const app = require('express')
+const app = require('express')()
 const db = require('./DbWrapper')
 const api = require('./ApiWrapper')
 const calc = require('./Calculations')
+
+app.get('/api/stats/team/postSeasonGames', async (req, res) => {
+  console.log('received request for team postseason games')
+  try {
+    const data = await db.getMostRecentTeamCalculation('MostPostSeasonGames')
+    console.log('sending data')
+    res.status(200).send(data.datapoints)
+  } catch (e) {
+    res.sendStatus(500)
+    console.error(e)
+  }
+})
 
 const fetchRoster = async function (teamObjectId, teamApiId) {
   const roster = await api.getRoster(teamApiId)
@@ -54,23 +66,21 @@ const fetchAllTeamsAndPlayers = async function () {
 
 try {
   db.connect(async () => {
-    // mongoose.connection.db.dropDatabase()
-    // await fetchAllTeamsAndPlayers()
-    await fetchMostPostSeasonGamesByTeam()
-    // db.getMostRecentTeamCalculation('MostPostSeasonGames').then((data) => {
-    // console.log(data.data[0])
-    // })
-
-    // api.getCareerPostSeasonStats(8471675);
-    // calc.teamMostPostSeasonGames();
+    if (process.argv[2] === '-w') {
+      mongoose.connection.db.dropDatabase()
+      await fetchAllTeamsAndPlayers()
+      await fetchPlayoffGamesByTeam()
+    }
+    app.listen(process.env.PORT || 3000)
+    console.log('listening on port', process.env.PORT || 3000)
   })
 } catch (e) {
   console.error(e)
 }
 
-const fetchMostPostSeasonGamesByTeam = async function () {
+const fetchPlayoffGamesByTeam = async function () {
   try {
-    const data = await calc.mostPostSeasonGamesByTeam()
+    const data = await calc.playoffGamesByTeam()
     db.addCalculation('MostPostSeasonGames', data)
   } catch (e) {
     console.error(e)

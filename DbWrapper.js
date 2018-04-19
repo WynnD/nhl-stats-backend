@@ -84,15 +84,16 @@ class DbWrapper {
   }
 
   async getMostRecentTeamCalculation (type) {
-    const populateOptions = {
-      path: 'data',
-      populate: {path: 'teamId'}
-    }
+    const populateOptions = { path: 'datapoints.args', model: 'Team' }
     return new Promise((resolve, reject) => {
-      model.Calculation.findOne({type: type})/* .populate(populateOptions) */.sort({date: -1}).lean().exec((err, calc) => {
-        if (err) reject(err)
-        else resolve(calc)
-      })
+      model.Calculation.findOne({type: type})
+        .populate(populateOptions)
+        .sort({date: -1})
+        .lean()
+        .exec((err, calc) => {
+          if (err) reject(err)
+          else resolve(calc)
+        })
     })
   }
 
