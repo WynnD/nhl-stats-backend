@@ -5,7 +5,7 @@ const calc = require('./Calculations')
 const RequestHandler = require('./RequestHandler')
 
 class NHLStats {
-  constructor () {
+  constructor (requestHandler = new RequestHandler()) {
     try {
       db.connect(async () => {
         if (process.argv[2] === '-w') {
@@ -13,9 +13,7 @@ class NHLStats {
           await this.fetchAllTeamsAndPlayers()
           await this.fetchPlayoffGamesByTeam()
         }
-
-        // create new RequestHandler here
-        const requestHandler = new RequestHandler()
+        this.requestHandler = requestHandler
       })
     } catch (e) {
       console.error(e)
@@ -71,6 +69,7 @@ class NHLStats {
   }
 
   async fetchPlayoffGamesByTeam () {
+    console.log('Fetching playoff games by team')
     try {
       const data = await calc.playoffGamesByTeam()
       db.addCalculation('MostPostSeasonGames', data)

@@ -20,7 +20,7 @@ class DbWrapper {
     const newTeam = new model.Team(team)
     newTeam.save((err, team) => {
       if (err) console.log(err)
-      else console.log(`Added team ${team.name}`)
+      else console.log(`Added team: ${team.name}`)
     })
   }
 
@@ -28,9 +28,7 @@ class DbWrapper {
     const newPlayer = new model.Player(player)
     newPlayer.save((err, player) => {
       if (err) console.log(err)
-      else {
-        // console.info('added player:', player);
-      }
+      else console.info(`Added player: ${player.person.fullName}`)
     })
   }
 
@@ -79,7 +77,7 @@ class DbWrapper {
     const newCalculation = new model.Calculation(insertData)
     newCalculation.save((err, calc) => {
       if (err) console.error(err)
-      else console.log(calc)
+      // else console.log(calc)
     })
   }
 
